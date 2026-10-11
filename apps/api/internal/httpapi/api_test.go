@@ -79,7 +79,7 @@ type testEnv struct {
 	store *store.Store
 }
 
-func newTestEnv(t *testing.T) *testEnv {
+func newTestEnv(t *testing.T, opts ...func(*Server)) *testEnv {
 	t.Helper()
 	pool := testdb.New(t)
 	if err := seed.EnsureDemo(context.Background(), pool, false, "https://app.test"); err != nil {
@@ -95,6 +95,9 @@ func newTestEnv(t *testing.T) *testEnv {
 			SessionTTL: time.Hour, MaxChecksPerSpace: 3, DemoEnabled: true,
 		},
 		DemoEmail: seed.DemoEmail,
+	}
+	for _, o := range opts {
+		o(s)
 	}
 	srv := httptest.NewServer(s.Handler())
 	t.Cleanup(srv.Close)
@@ -372,14 +375,22 @@ func TestSettingsUpdateValidatesWebhook(t *testing.T) {
 }
 
 func TestAuthRateLimit(t *testing.T) {
-	e := newTestEnv(t)
+	// One token per minute with a burst of 3 makes the 4th attempt fail
+	// deterministically, however slow the test machine is.
+	e := newTestEnv(t, func(s *Server) { s.AuthRateLimit = RateLimit{PerMinute: 1, Burst: 3} })
 	c := e.client(t)
-	var last apiResp
-	for i := 0; i < 12; i++ {
-		last = c.do("POST", "/api/auth/login", map[string]any{"email": "x@example.com", "password": "nope-nope"})
+	for i := 0; i < 3; i++ {
+		if r := c.do("POST", "/api/auth/login", map[string]any{"email": "x@example.com", "password": "nope-nope"}); r.Status != 401 {
+			t.Fatalf("attempt %d: got %d, want 401", i+1, r.Status)
+		}
 	}
+	last := c.do("POST", "/api/auth/login", map[string]any{"email": "x@example.com", "password": "nope-nope"})
 	if last.Status != http.StatusTooManyRequests || last.Header.Get("Retry-After") == "" {
 		t.Fatalf("expected 429 with Retry-After, got %d", last.Status)
+	}
+	// Non-auth endpoints are not affected by the auth bucket.
+	if r := c.do("GET", "/api/public/status/demo", nil); r.Status != 200 {
+		t.Fatalf("public endpoint throttled: %d", r.Status)
 	}
 }
 

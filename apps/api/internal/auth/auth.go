@@ -6,12 +6,14 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"errors"
+	"sync"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-// BcryptCost balances login latency against offline cracking cost.
-const BcryptCost = 12
+// BcryptCost balances login latency against offline cracking cost. Tests
+// lower it to bcrypt.MinCost to stay fast.
+var BcryptCost = 12
 
 // ErrInvalidCredentials is returned for any failed login, without revealing
 // whether the email exists.
@@ -28,12 +30,18 @@ func CheckPassword(hash, password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
 }
 
-// dummyHash lets login spend the same bcrypt time for unknown emails, so
-// response timing does not reveal which addresses are registered.
-var dummyHash, _ = bcrypt.GenerateFromPassword([]byte("pulseops-timing-equaliser"), BcryptCost)
+var (
+	dummyOnce sync.Once
+	dummyHash []byte
+)
 
-// EqualiseTiming performs a throwaway bcrypt comparison.
+// EqualiseTiming performs a throwaway bcrypt comparison so that login spends
+// the same time for unknown emails and response timing does not reveal which
+// addresses are registered.
 func EqualiseTiming(password string) {
+	dummyOnce.Do(func() {
+		dummyHash, _ = bcrypt.GenerateFromPassword([]byte("pulseops-timing-equaliser"), BcryptCost)
+	})
 	_ = bcrypt.CompareHashAndPassword(dummyHash, []byte(password))
 }
 

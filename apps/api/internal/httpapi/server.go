@@ -23,6 +23,10 @@ type Server struct {
 	Config  config.Config
 	// DemoEmail is the account "Try the demo" signs into.
 	DemoEmail string
+	// AuthRateLimit and WriteRateLimit default to 20/min (burst 10) and
+	// 120/min (burst 60) per client IP when zero.
+	AuthRateLimit  RateLimit
+	WriteRateLimit RateLimit
 
 	authLimiter  *ipRateLimiter
 	writeLimiter *ipRateLimiter
@@ -30,8 +34,8 @@ type Server struct {
 
 // Handler builds the HTTP router.
 func (s *Server) Handler() http.Handler {
-	s.authLimiter = newIPRateLimiter(20, 10)
-	s.writeLimiter = newIPRateLimiter(120, 60)
+	s.authLimiter = s.AuthRateLimit.orDefault(20, 10).limiter()
+	s.writeLimiter = s.WriteRateLimit.orDefault(120, 60).limiter()
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -105,6 +109,21 @@ func (s *Server) Handler() http.Handler {
 	})
 	return r
 }
+
+// RateLimit is a per-client token bucket: PerMinute refill, Burst capacity.
+type RateLimit struct {
+	PerMinute float64
+	Burst     int
+}
+
+func (r RateLimit) orDefault(perMinute float64, burst int) RateLimit {
+	if r.PerMinute <= 0 || r.Burst <= 0 {
+		return RateLimit{PerMinute: perMinute, Burst: burst}
+	}
+	return r
+}
+
+func (r RateLimit) limiter() *ipRateLimiter { return newIPRateLimiter(r.PerMinute, r.Burst) }
 
 // limitWrites rate-limits mutating requests per client.
 func (s *Server) limitWrites(next http.Handler) http.Handler {
