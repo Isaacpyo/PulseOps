@@ -77,7 +77,7 @@ func (f *fixture) probe(c store.Check) store.ProbeOutcome {
 	if err != nil {
 		f.t.Fatal(err)
 	}
-	out, err := f.sched.Execute(f.ctx, fresh)
+	out, err := f.sched.Execute(f.ctx, store.ClaimedCheck{Check: fresh, DueAt: time.Now()})
 	if err != nil {
 		f.t.Fatal(err)
 	}
@@ -297,6 +297,9 @@ func TestClaimDueChecksLeasesEachCheckOnce(t *testing.T) {
 	first, err := f.store.ClaimDueChecks(f.ctx, 10)
 	if err != nil || len(first) != 1 || first[0].ID != c.ID {
 		t.Fatalf("first claim = %+v, %v", first, err)
+	}
+	if !first[0].DueAt.Equal(c.NextRunAt) {
+		t.Fatalf("due_at = %v, want original next_run_at %v", first[0].DueAt, c.NextRunAt)
 	}
 	if !first[0].NextRunAt.After(time.Now().Add(50 * time.Second)) {
 		t.Fatalf("next_run_at not pushed forward: %v", first[0].NextRunAt)

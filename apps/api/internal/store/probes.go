@@ -13,29 +13,36 @@ import (
 	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
 )
 
+// ClaimedCheck is a check leased for probing plus the time it was due.
+type ClaimedCheck struct {
+	Check
+	DueAt time.Time
+}
+
 // ClaimDueChecks atomically leases up to limit due checks by pushing their
 // next_run_at forward one interval. SKIP LOCKED makes this safe across
 // multiple API instances.
-func (s *Store) ClaimDueChecks(ctx context.Context, limit int) ([]Check, error) {
+func (s *Store) ClaimDueChecks(ctx context.Context, limit int) ([]ClaimedCheck, error) {
 	rows, err := s.pool.Query(ctx, `UPDATE checks c
 		-- During a chaos drill probe every 10s so the demo pipeline reacts quickly.
 		SET next_run_at = now() + make_interval(secs => CASE
 			WHEN c.drill_until > now() THEN LEAST(c.interval_seconds, 10)
 			ELSE c.interval_seconds END)
-		WHERE c.id IN (
-			SELECT id FROM checks
+		FROM (
+			SELECT id, next_run_at AS due_at FROM checks
 			WHERE enabled AND next_run_at <= now()
 			ORDER BY next_run_at
 			LIMIT $1
 			FOR UPDATE SKIP LOCKED
-		)
-		RETURNING `+checkColumns, limit)
+		) due
+		WHERE c.id = due.id
+		RETURNING `+checkColumns+`, due.due_at`, limit)
 	if err != nil {
 		return nil, err
 	}
-	return pgx.CollectRows(rows, func(row pgx.CollectableRow) (Check, error) {
-		var c Check
-		return c, row.Scan(c.scanTargets()...)
+	return pgx.CollectRows(rows, func(row pgx.CollectableRow) (ClaimedCheck, error) {
+		var c ClaimedCheck
+		return c, row.Scan(append(c.scanTargets(), &c.DueAt)...)
 	})
 }
 

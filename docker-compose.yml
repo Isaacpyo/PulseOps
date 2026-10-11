@@ -1,0 +1,102 @@
+# Runs the whole PulseOps stack locally:
+#   docker compose up --build
+# Console http://localhost:3000 · API http://localhost:8080
+# Prometheus http://localhost:9090 · Grafana http://localhost:3001 (admin / admin)
+name: pulseops
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: pulseops
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pulseops}
+      POSTGRES_DB: pulseops
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U pulseops -d pulseops']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./apps/api
+    environment:
+      DATABASE_URL: postgres://pulseops:${POSTGRES_PASSWORD:-pulseops}@postgres:5432/pulseops?sslmode=disable
+      PORT: '8080'
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173
+      PUBLIC_APP_URL: http://localhost:3000
+      NOTIFIER: ${NOTIFIER:-mock}
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      # Lets local checks target other containers (e.g. http://api:8080/healthz).
+      # Never enable this on an internet-facing deployment.
+      ALLOW_PRIVATE_TARGETS: 'true'
+      DEMO_ENABLED: 'true'
+      DEMO_RESET_ON_BOOT: ${DEMO_RESET_ON_BOOT:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      REMOTE_WRITE_URL: ${REMOTE_WRITE_URL:-}
+      REMOTE_WRITE_USERNAME: ${REMOTE_WRITE_USERNAME:-}
+      REMOTE_WRITE_PASSWORD: ${REMOTE_WRITE_PASSWORD:-}
+    ports:
+      - '8080:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', '/pulseops', 'healthcheck']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        VITE_API_URL: http://localhost:8080
+    ports:
+      - '3000:80'
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=7d
+      - --web.enable-lifecycle
+    volumes:
+      - ./deploy/prometheus:/etc/prometheus:ro
+      - promdata:/prometheus
+    ports:
+      - '9090:9090'
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-oss:12.1.1
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/pulseops.json
+      GF_USERS_DEFAULT_THEME: system
+    volumes:
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./deploy/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafanadata:/var/lib/grafana
+    ports:
+      - '3001:3000'
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  promdata:
+  grafanadata:

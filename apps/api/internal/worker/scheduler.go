@@ -45,7 +45,7 @@ func (s *Scheduler) Run(ctx context.Context) {
 	if s.PollInterval <= 0 {
 		s.PollInterval = time.Second
 	}
-	jobs := make(chan store.Check, s.Concurrency)
+	jobs := make(chan store.ClaimedCheck, s.Concurrency)
 	var wg sync.WaitGroup
 	for i := 0; i < s.Concurrency; i++ {
 		wg.Add(1)
@@ -99,11 +99,10 @@ func (s *Scheduler) now() time.Time {
 
 // Execute probes one claimed check and records the result. It is exported so
 // tests (and a future "run now, synchronously" endpoint) can drive it.
-func (s *Scheduler) Execute(ctx context.Context, c store.Check) (store.ProbeOutcome, error) {
+func (s *Scheduler) Execute(ctx context.Context, c store.ClaimedCheck) (store.ProbeOutcome, error) {
 	start := s.now()
-	if s.Metrics != nil {
-		scheduled := c.NextRunAt.Add(-time.Duration(c.IntervalSeconds) * time.Second)
-		if lag := start.Sub(scheduled); lag > 0 {
+	if s.Metrics != nil && !c.DueAt.IsZero() {
+		if lag := start.Sub(c.DueAt); lag > 0 {
 			s.Metrics.SchedulerLag.Observe(lag.Seconds())
 		}
 	}

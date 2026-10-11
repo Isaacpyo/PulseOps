@@ -1,0 +1,61 @@
+# Render Blueprint for the PulseOps API (free web service, Docker runtime).
+# New → Blueprint → select this repo. Values marked `sync: false` are
+# prompted for on first deploy and must be set in the Render dashboard.
+services:
+  - type: web
+    name: pulseops-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: ./apps/api
+    healthCheckPath: /healthz
+    autoDeploy: true
+    buildFilter:
+      paths:
+        - apps/api/**
+    envVars:
+      # Neon pooled connection string, e.g.
+      # postgres://user:pass@ep-xxx-pooler.eu-central-1.aws.neon.tech/pulseops?sslmode=require
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://pulseops.temitopeagbola.com
+      - key: PUBLIC_APP_URL
+        value: https://pulseops.temitopeagbola.com
+      - key: TRUST_PROXY_HEADERS
+        value: 'true'
+      - key: LOG_LEVEL
+        value: info
+      - key: SCHEDULER_ENABLED
+        value: 'true'
+      - key: WORKER_CONCURRENCY
+        value: '8'
+      - key: ALLOW_PRIVATE_TARGETS
+        value: 'false'
+      - key: RESULT_RETENTION_DAYS
+        value: '7'
+      - key: MAX_CHECKS_PER_WORKSPACE
+        value: '25'
+      # "mock" until a Slack webhook is configured; then switch to "slack".
+      - key: NOTIFIER
+        value: mock
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: DEMO_ENABLED
+        value: 'true'
+      # The free instance sleeps when idle; every wake re-seeds a clean demo.
+      - key: DEMO_RESET_ON_BOOT
+        value: 'true'
+      - key: METRICS_TOKEN
+        generateValue: true
+      # Grafana Cloud → Prometheus → "Send metrics" details.
+      - key: REMOTE_WRITE_URL
+        sync: false
+      - key: REMOTE_WRITE_USERNAME
+        sync: false
+      - key: REMOTE_WRITE_PASSWORD
+        sync: false
+      - key: REMOTE_WRITE_INTERVAL
+        value: 30s
