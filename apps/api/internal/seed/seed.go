@@ -208,8 +208,11 @@ func (s *seeder) seedCheck(ctx context.Context, idx int, dc demoCheck) error {
 		}
 		down, degraded := 0, 0
 		// Occasional single-probe blips that stay below the alert threshold.
-		if rng.Float64() < 0.12 {
-			down += 1 + rng.IntN(2)
+		switch r := rng.Float64(); {
+		case r < 0.02:
+			down += 2
+		case r < 0.10:
+			down++
 		}
 		for _, pi := range incByDay[daysAgo] {
 			probes := max(1, pi.minutes*60/dc.interval)
