@@ -67,7 +67,7 @@ var demoChecks = []demoCheck{
 		{75, 22, 4, "down", 0, "", false},
 	}},
 	{"Google DNS", "tcp", "8.8.8.8:53", 60, 5000, 300, 14, nil},
-	{"Wikipedia", "http", "https://www.wikipedia.org/", 120, 10000, 1500, 130, []pastIncident{
+	{"Wikipedia", "http", "https://www.wikipedia.org/", 60, 10000, 1500, 130, []pastIncident{
 		{5, 11, 31, "down", 3, "TLS certificate on the origin expired; renewed and redeployed.", true},
 		{2, 16, 12, "degraded", 0, "", false},
 	}},
@@ -207,8 +207,10 @@ func (s *seeder) seedCheck(ctx context.Context, idx int, dc demoCheck) error {
 			total = max(1, int(s.now.Sub(today).Seconds())/dc.interval)
 		}
 		down, degraded := 0, 0
-		// Occasional single-probe blips that stay below the alert threshold.
+		// Occasional single-probe blips that stay below the alert threshold
+		// (not today: a blip in a partial day would skew its percentage).
 		switch r := rng.Float64(); {
+		case daysAgo == 0:
 		case r < 0.02:
 			down += 2
 		case r < 0.10:

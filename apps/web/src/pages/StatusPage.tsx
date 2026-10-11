@@ -139,8 +139,8 @@ function IncidentItem({ inc }: { inc: PublicIncident }) {
     <article className="rounded-xl border border-line bg-surface px-4 py-3 sm:px-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-medium text-ink">{inc.title}</h3>
-        <StatusBadge tone={resolved ? 'good' : inc.status === 'acknowledged' ? 'warning' : 'critical'}>
-          {resolved ? 'Resolved' : inc.status === 'acknowledged' ? 'Investigating' : 'Identified'}
+        <StatusBadge tone={resolved ? 'good' : inc.cause === 'down' ? 'critical' : 'warning'}>
+          {resolved ? 'Resolved' : inc.status === 'acknowledged' ? 'Investigating' : 'Detected'}
         </StatusBadge>
       </div>
       <p className="mt-1 text-sm text-muted">
