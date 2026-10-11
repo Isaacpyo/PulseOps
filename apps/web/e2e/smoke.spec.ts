@@ -60,7 +60,8 @@ test('demo operator can triage an incident end to end', async ({ page }, testInf
   await page.goto('/status/demo');
   await expect(page.getByRole('heading', { name: 'Acme Cloud status' })).toBeVisible();
   await expect(page.getByText('All systems operational')).toBeVisible();
-  const bars = page.getByRole('list', { name: /Marketing website: daily uptime, last 90 days/ });
-  await expect(bars.getByRole('listitem')).toHaveCount(90);
+  // 90 days of bars; phones show the most recent 30 so each stays tappable.
+  const bars = page.getByRole('list', { name: 'Marketing website: daily uptime history' });
+  await expect(bars.getByRole('listitem')).toHaveCount(mobile ? 30 : 90);
   await expect(page.getByRole('heading', { name: /Past incidents/ })).toBeVisible();
 });

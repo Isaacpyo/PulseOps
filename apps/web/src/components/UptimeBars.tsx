@@ -35,7 +35,7 @@ export function UptimeBars({ bars, label }: { bars: UptimeBar[]; label: string }
 
   return (
     <div className="relative" onPointerLeave={() => setActive(null)}>
-      <ol aria-label={`${label}: daily uptime, last ${total} days`} className="flex h-8 items-stretch gap-[2px]">
+      <ol aria-label={`${label}: daily uptime history`} className="flex h-8 items-stretch gap-[2px]">
         {bars.map((bar, i) => {
           const level = uptimeLevel(bar.uptime);
           return (

@@ -14,7 +14,7 @@ const bars: UptimeBar[] = Array.from({ length: 90 }, (_, i) => ({
 
 it('renders one accessible cell per day', () => {
   render(<UptimeBars bars={bars} label="API" />);
-  const list = screen.getByRole('list', { name: 'API: daily uptime, last 90 days' });
+  const list = screen.getByRole('list', { name: 'API: daily uptime history' });
   expect(list.querySelectorAll('li')).toHaveLength(90);
   expect(screen.getAllByLabelText(/no data/)).toHaveLength(10);
 });

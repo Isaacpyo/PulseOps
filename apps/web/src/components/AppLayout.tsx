@@ -51,7 +51,7 @@ function AppLayout() {
             <Logo />
             PulseOps
           </Link>
-          <nav aria-label="Main" className="order-3 -mx-1 flex w-full gap-1 overflow-x-auto sm:order-none sm:w-auto">
+          <nav aria-label="Main" className="relative order-3 -mx-1 flex w-full gap-1 overflow-x-auto sm:order-none sm:w-auto">
             {nav.map((item) => (
               <NavLink
                 key={item.to}
