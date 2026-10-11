@@ -4,3 +4,4 @@
 .DS_Store
 *.log
 /apps/api/pulseops
+/apps/api/bin/
