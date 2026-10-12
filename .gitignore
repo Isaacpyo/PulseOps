@@ -1,0 +1,4 @@
+# Local env files hold secrets: never commit them (.env.example is the template).
+.env
+.env.*
+!.env.example
