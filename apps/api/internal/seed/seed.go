@@ -17,8 +17,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/auth"
-	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/auth"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/notify"
 )
 
 // Demo account identifiers.

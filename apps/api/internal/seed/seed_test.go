@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/testdb"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/testdb"
 )
 
 func TestEnsureDemoIsIdempotentAndResettable(t *testing.T) {

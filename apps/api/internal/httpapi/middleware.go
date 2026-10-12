@@ -15,8 +15,8 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"golang.org/x/time/rate"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/auth"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/auth"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
 )
 
 type ctxKey int

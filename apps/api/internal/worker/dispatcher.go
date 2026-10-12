@@ -6,9 +6,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/metrics"
-	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/metrics"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/notify"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
 )
 
 // Dispatcher drains the notification outbox.

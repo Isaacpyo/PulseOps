@@ -8,8 +8,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/auth"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/auth"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
 )
 
 type sessionResponse struct {

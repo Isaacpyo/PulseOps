@@ -3,7 +3,7 @@ package httpapi
 import (
 	"testing"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
 )
 
 func ptr[T any](v T) *T { return &v }

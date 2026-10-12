@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/alert"
-	"github.com/isaacpyo/pulseops/apps/api/internal/metrics"
-	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
-	"github.com/isaacpyo/pulseops/apps/api/internal/probe"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
-	"github.com/isaacpyo/pulseops/apps/api/internal/testdb"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/alert"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/metrics"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/notify"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/probe"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/testdb"
 )
 
 type fixture struct {

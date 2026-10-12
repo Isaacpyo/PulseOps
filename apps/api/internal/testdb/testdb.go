@@ -12,7 +12,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/db"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/db"
 )
 
 // New returns a pool bound to a fresh schema that is dropped on cleanup.

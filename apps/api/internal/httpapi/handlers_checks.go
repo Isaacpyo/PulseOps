@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/probe"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
-	"github.com/isaacpyo/pulseops/apps/api/internal/uptime"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/probe"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/uptime"
 )
 
 // Limits enforced at the API boundary.
