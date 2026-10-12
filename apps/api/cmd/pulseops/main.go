@@ -16,15 +16,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/config"
-	"github.com/isaacpyo/pulseops/apps/api/internal/db"
-	"github.com/isaacpyo/pulseops/apps/api/internal/httpapi"
-	"github.com/isaacpyo/pulseops/apps/api/internal/metrics"
-	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
-	"github.com/isaacpyo/pulseops/apps/api/internal/probe"
-	"github.com/isaacpyo/pulseops/apps/api/internal/seed"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
-	"github.com/isaacpyo/pulseops/apps/api/internal/worker"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/config"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/db"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/httpapi"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/metrics"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/notify"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/probe"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/seed"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/worker"
 )
 
 func main() {

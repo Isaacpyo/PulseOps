@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/auth"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/auth"
 )
 
 func TestMain(m *testing.M) {

@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/metrics"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/metrics"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
 )
 
 // Maintenance prunes old data and refreshes database-derived gauges.

@@ -31,4 +31,4 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/isaacpyo/pulseops
+        - github.com/temitopeagbola/pulseops

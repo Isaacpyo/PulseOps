@@ -7,7 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/uptime"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/uptime"
 )
 
 // ListChecks returns all checks in a workspace with 24h aggregates, the most

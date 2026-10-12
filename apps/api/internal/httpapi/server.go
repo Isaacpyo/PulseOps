@@ -9,10 +9,10 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/config"
-	"github.com/isaacpyo/pulseops/apps/api/internal/metrics"
-	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/config"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/metrics"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/notify"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
 )
 
 // Server holds handler dependencies.

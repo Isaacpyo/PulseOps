@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
-	"github.com/isaacpyo/pulseops/apps/api/internal/uptime"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/uptime"
 )
 
 // Component and overall states shown on the public status page. They are

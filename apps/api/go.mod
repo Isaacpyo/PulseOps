@@ -1,4 +1,4 @@
-module github.com/isaacpyo/pulseops/apps/api
+module github.com/temitopeagbola/pulseops/apps/api
 
 go 1.26.0
 

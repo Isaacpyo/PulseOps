@@ -9,8 +9,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/alert"
-	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/alert"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/notify"
 )
 
 // ClaimedCheck is a check leased for probing plus the time it was due.

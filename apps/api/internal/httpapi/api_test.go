@@ -12,12 +12,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/isaacpyo/pulseops/apps/api/internal/config"
-	"github.com/isaacpyo/pulseops/apps/api/internal/metrics"
-	"github.com/isaacpyo/pulseops/apps/api/internal/notify"
-	"github.com/isaacpyo/pulseops/apps/api/internal/seed"
-	"github.com/isaacpyo/pulseops/apps/api/internal/store"
-	"github.com/isaacpyo/pulseops/apps/api/internal/testdb"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/config"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/metrics"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/notify"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/seed"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/store"
+	"github.com/temitopeagbola/pulseops/apps/api/internal/testdb"
 )
 
 type apiClient struct {
