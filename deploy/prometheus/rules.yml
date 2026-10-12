@@ -1,0 +1,30 @@
+# Alerts on the monitoring platform itself ("who watches the watchers").
+groups:
+  - name: pulseops
+    rules:
+      - alert: PulseOpsAPIDown
+        expr: up{job="pulseops-api"} == 0
+        for: 1m
+        labels: { severity: critical }
+        annotations:
+          summary: PulseOps API is not being scraped
+
+      - alert: PulseOpsSchedulerLagging
+        expr: histogram_quantile(0.95, sum by (le) (rate(pulseops_scheduler_lag_seconds_bucket[5m]))) > 10
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: Probes are starting more than 10s late (p95) — workers may be saturated
+
+      - alert: PulseOpsNotificationsFailing
+        expr: sum(increase(pulseops_notifications_total{result="failed"}[15m])) > 0
+        labels: { severity: warning }
+        annotations:
+          summary: Alert notifications are permanently failing to deliver
+
+      - alert: PulseOpsTargetDown
+        expr: pulseops_check_up == 0
+        for: 3m
+        labels: { severity: info }
+        annotations:
+          summary: 'Check {{ $labels.check }} has been failing for 3 minutes'

@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Chart/status values follow the validated reference palette
+ * (dataviz skill): status colours are reserved for state and always paired
+ * with a text label or icon.
+ */
+@theme {
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --color-page: #f6f6f3;
+  --color-surface: #fcfcfb;
+  --color-raised: #ffffff;
+  --color-ink: #0b0b0b;
+  --color-ink-2: #52514e;
+  --color-muted: #6b6a65;
+  --color-axis: #898781;
+  --color-line: #e1e0d9;
+  --color-line-strong: #c3c2b7;
+  --color-wash: #f0efec;
+
+  --color-accent: #2a78d6;
+  --color-accent-strong: #1c5cab;
+  --color-accent-wash: #e6f0fc;
+  --color-on-accent: #ffffff;
+
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-serious: #ec835a;
+  --color-critical: #d03b3b;
+  --color-good-ink: #006300;
+  --color-warning-ink: #7a5000;
+  --color-serious-ink: #9a3f16;
+  --color-critical-ink: #b02a2a;
+  --color-good-wash: #e5f5e5;
+  --color-warning-wash: #fff4dc;
+  --color-critical-wash: #fbe9e9;
+
+  --color-series-1: #2a78d6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-page: #0d0d0d;
+    --color-surface: #1a1a19;
+    --color-raised: #222220;
+    --color-ink: #f0efec;
+    --color-ink-2: #c3c2b7;
+    --color-muted: #a3a199;
+    --color-axis: #898781;
+    --color-line: #2c2c2a;
+    --color-line-strong: #383835;
+    --color-wash: #262624;
+
+    --color-accent: #3987e5;
+    --color-accent-strong: #86b6ef;
+    --color-accent-wash: #16263a;
+    --color-on-accent: #ffffff;
+
+    --color-good-ink: #3fc23f;
+    --color-warning-ink: #fab219;
+    --color-serious-ink: #f09a77;
+    --color-critical-ink: #ec7a7a;
+    --color-good-wash: #10260f;
+    --color-warning-wash: #2d2410;
+    --color-critical-wash: #2f1515;
+
+    --color-series-1: #3987e5;
+    color-scheme: dark;
+  }
+}
+
+html {
+  background: var(--color-page);
+  color: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-page);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
